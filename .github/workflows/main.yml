@@ -1,0 +1,40 @@
+# workflow名稱
+name: ligjthouseCi
+#觸發workflow時機
+on:
+  #master跟dev 分支push與pull request觸發workflow
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
+      - dev
+
+#一個workflow 可能包括多個job，每個job 都運行在一個新鮮的virtual machine 實例中，即job 和job 之間運行的不是同一個VM，而一個job 之內的每個step 都運行在同一VM 中，所以step 之間可以共享這個VM 文件系統中的數據。而不同job 之間傳遞數據，需要在前一個job 定義一個outputs 字段。
+
+jobs:
+  #建立 lhci jobs->jobs的名稱，可以自取
+
+  lhci:
+    name: Lighthouse
+    # 執行在作業系統為ubuntu的runner
+    runs-on: ubuntu-latest
+    # steps會循序執行一連串動作
+    steps:
+      # uses: actions/checkout@v2意思是使用一個用戶名叫actions 用戶發布的，名為checkout的開源github action，版本號是v2，所以你看action 也可以發佈出來供大家使用。具體到checkout 這個action，它的作用是把你的repo 添加到runner 的某個文件夾中，於是之後的step 就可以訪問這些文件。
+
+      - uses: actions/checkout@v2
+      - name: Use Node.js 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+      - name: npm install, build
+        run: |
+          npm install 
+          npm run build
+      - name: run Lighthouse CI
+        run: |
+          npm install -g @lhci/cli@0.8.x
+          lhci autorun

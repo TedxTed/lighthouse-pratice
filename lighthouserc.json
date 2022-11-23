@@ -1,0 +1,19 @@
+{
+  "ci": {
+    "collect": {
+      "numberOfRuns": 3,
+      "startServerCommand": "npm run dev"
+    },
+    "assert": {
+        "assertions": {
+        "first-contentful-paint": "off",
+        "installable-manifest": ["warn", {"minScore": 1}],
+        "uses-responsive-images": ["error", {"maxLength": 0}]
+      }
+
+    },
+    "upload": {
+      "target": "temporary-public-storage"
+    }
+  }
+}
